@@ -14,6 +14,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdatePutUserDTO } from './dto/update-put-user.dto';
 import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
+import { ParamId } from 'src/decorators/paramId.decoretor';
 // import { LogInterceptor } from '../interceptors/log.interceptor';
 
 // @UseInterceptors(LogInterceptor) possivel usar somente em controller ou global ou por metodo.
@@ -32,28 +33,22 @@ export class UserController {
   }
 
   @Get(':id')
-  async readOne(@Param('id', ParseIntPipe) id: number) {
+  async readOne(@ParamId() id: number) {
     return this.userService.readOne(id);
   }
 
   @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdatePutUserDTO,
-  ) {
+  async update(@ParamId() id: number, @Body() data: UpdatePutUserDTO) {
     return await this.userService.update(id, data);
   }
 
   @Patch(':id')
-  async updatePartial(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdatePatchUserDTO,
-  ) {
+  async updatePartial(@ParamId() id: number, @Body() data: UpdatePatchUserDTO) {
     return await this.userService.updatePartial(id, data);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@ParamId() id: number) {
     return await this.userService.delete(id);
   }
 }

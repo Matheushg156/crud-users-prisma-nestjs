@@ -30,6 +30,8 @@ export class UserService {
   }
 
   async readOne(id: number) {
+    await this.userExists(id);
+
     return await this.prisma.user.findUnique({
       where: { id },
     });

@@ -9,7 +9,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async userExists(id: number) {
-    if (!(await this.readOne(id))) {
+    if (!(await this.prisma.user.count({ where: { id } }))) {
       throw new NotFoundException(`User with id ${id} does not exist`);
     }
   }

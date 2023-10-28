@@ -7,13 +7,17 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
+  private issuer = 'login'
+  private audience = 'users'
+
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly userService: UserService
     ) {}
 
-    async createToken(user: User) {
+    createToken(user: User) {
       return {
         accessToken: this.jwtService.sign({
           id: user.id,
@@ -22,14 +26,33 @@ export class AuthService {
         }, {
           expiresIn: '7d',
           subject: user.id.toString(),
-          issuer: 'login',
-          audience: 'users'
+          issuer: this.issuer,
+          audience: this.audience
         })
       }
     }
 
-    async checkToken() {
-      // return await this.jwtService.verify();
+    checkToken(token: string) {
+      try {
+        const data = this.jwtService.verify(token, {
+          issuer: this.issuer,
+          audience: this.audience
+        });
+
+        return data;
+      } catch (error) {
+        throw new UnauthorizedException('Token invalid');
+      }
+    }
+
+    isValideToken(token: string) {
+      try {
+        this.checkToken(token);
+
+        return true;
+      } catch (error) {
+        return false;
+      }
     }
 
     async login(email: string, password: string) {

@@ -58,10 +58,16 @@ export class AuthService {
 
     async login(email: string, password: string) {
       const user = await this.prisma.user.findFirst({
-        where: { email, password }
+        where: { email }
       })
 
       if (!user) {
+        throw new UnauthorizedException('Email or password incorrect');
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
         throw new UnauthorizedException('Email or password incorrect');
       }
 

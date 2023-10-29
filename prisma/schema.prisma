@@ -13,6 +13,7 @@ model User {
   email     String    @db.VarChar(255)
   password  String    @db.VarChar(255)
   birthAt   DateTime? @map("birth_at") @db.Date
+  role      Int       @default(1) @db.UnsignedInt
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamp(0)
 
